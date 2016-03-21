@@ -178,18 +178,18 @@ class Model {
     }
 	
     // ############# Achievements functions ###################
-    public function insert_achievement($name, $short, $long, $points, $cat){
+    public function insert_achievement($name, $short, $long, $points, $classID){
 	    if($name == ""	    ||
 	        $short == ""    ||
 	        $long == ""	    ||
 	        $points == ""   ||
-	        $cat    == ""   ||
+	        $classID    == ""   ||
 	        !$this->connected){
 	        return $this->result_message(FALSE, "Could not complete operation");
 	    }
 
-	    $sql = " INSERT INTO achievements(name, short_desc,long_desc, points, catagory) 
-	        VALUES ('$name', '$short', '$long', '$points', '$cat')";
+	    $sql = " INSERT INTO achievements(name, short_desc,long_desc, points, classID) 
+	        VALUES ('$name', '$short', '$long', '$points', '$classID')";
 	    try { 	
 	        $this->conn->exec($sql);
 	        return $this->result_message(TRUE, "Achievement Added.");
@@ -199,12 +199,12 @@ class Model {
 	    } 
     }
 	
-    public function edit_achievement($id, $name, $short, $long, $points, $cat){
+    public function edit_achievement($id, $name, $short, $long, $points, $classID){
 	    if($name == ""	    ||
 	        $short == ""    ||
 	        $long == ""	    ||
 	        $points == ""   ||
-	        $cat    == ""   ||
+	        $classID    == ""   ||
 	        !$this->connected){
 	        return $this->result_message(FALSE, "Could not complete operation");
 	    }
@@ -212,7 +212,7 @@ class Model {
 			    short_desc=\"$short\",
 			    long_desc=\"$long\", 
 			    points=$points,
-			    catagory=\"$cat\"
+			    classID=\"$classID\"
 			    WHERE achievementID=$id";
 	    try { 	
 	        $this->conn->exec($q);
@@ -226,7 +226,7 @@ class Model {
     public function get_achievements(){
 	    $q = "SELECT * FROM achievements";
 	    if(!$this->connected) return;
-	        return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
+	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
         }
 	
     public function earn_achievement($achID, $stuID){
@@ -261,6 +261,72 @@ class Model {
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
     }
 	
+    // ############# Class functions ###################
+    public function add_class($name, $short, $long){
+	    if($name == ""	    ||
+	        $short == ""    ||
+	        $long == ""	    ||
+	        !$this->connected){
+	        return $this->result_message(FALSE, "Could not complete operation");
+	    }
+
+	    $sql = " INSERT INTO classes(name, short_desc,long_desc) 
+	        VALUES ('$name', '$short', '$long')";
+	    try { 	
+	        $this->conn->exec($sql);
+	        return $this->result_message(TRUE, "Class Added.");
+	    } 
+	    catch(PDOException $e) {
+	        return $this->result_message(FALSE, "Failed to add Class.");
+	    } 
+    }
+	
+    public function edit_class($id, $name, $short, $long){
+	    if($name == ""	    ||
+	        $short == ""    ||
+	        $long == ""	    ||
+	        !$this->connected){
+	        return $this->result_message(FALSE, "Could not complete operation");
+	    }
+	    $q = "UPDATE classes SET name=\"$name\", 
+			    short_desc=\"$short\",
+			    long_desc=\"$long\"  
+			    WHERE classID=$id";
+	    try { 	
+	        $this->conn->exec($q);
+	        return $this->result_message(TRUE, "Class Edited.");
+	    } 
+	    catch(PDOException $e) {
+	        return $this->result_message(FALSE, "Failed to edit class.");
+	    } 
+    }
+	
+    public function get_classes(){
+	    $q = "SELECT * FROM classes";
+	    if(!$this->connected) return;
+	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
+    }
+	
+    public function add_student_to_class($classID, $stuID, $isAdmin){
+	    if(!$this->connected) return;
+	    $q = "INSERT INTO class_members_def(classID, studentID, admin) VALUES($achID, $stuID, $isAdmin)";
+	    try { 	
+	        $this->conn->exec($q);
+	        return $this->result_message(TRUE, "Successfully updated earned achievements.");
+	    }    
+	    catch(PDOException $e) {
+	        return $this->result_message(FALSE, "Failed to update earned achievements.");
+	    }    
+    }
+	
+    function get_student_classes($stuID){
+	    $q = "SELECT * FROM class_members RIGHT JOIN classes AS c 
+			    ON class_members.classID=c.classID 
+			    WHERE class_members.studentID=$stuID";
+	    if(!$this->connected) return;
+	    //echo(json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC)));
+	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
+    }
     //#########---- DELETE ID FROM TABLE --- ############	
     function delete_ID_from_table($condition, $tablename){
 	    if(!$this->connected) return;

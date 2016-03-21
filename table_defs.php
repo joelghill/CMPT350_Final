@@ -14,7 +14,7 @@
 		short_desc VARCHAR(255) NOT NULL,
 		long_desc VARCHAR(400) NOT NULL,
 		points int NOT NULL,
-		catagory varchar(255) NOT NULL,
+		classID int NOT NULL,
 		creation_date TIMESTAMP
 		)";
 		
