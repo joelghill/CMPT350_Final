@@ -11,7 +11,9 @@ $app = new \Slim\App;
 
 //echo "Created now Slim app instance....";
 $model = new Model();
-$model->init("localhost", "root", "root", "A3"); //PUT DATABASE AND PASSWORD HERE!!!! 
+$model->init("localhost", "root", "root", "finalv1"); //PUT DATABASE AND PASSWORD HERE!!!! 
+
+//############## Students API ###################//
 
 //Get all students
 $app->get('/api/students', function(Request $request, Response $response) use ($model) {
@@ -27,6 +29,23 @@ $app->get('/api/students/{id}', function(Request $request, Response $response) u
     $id = $request->getAttribute('id');
     $student = $model->get_student($id);
     $response->getBody()->write($student);
+    return $response;
+});
+
+//Get Student achievements
+$app->get('/api/students/{id}/achievements', function(Request $request, Response $response) use ($model) {
+
+    $id = $request->getAttribute('id');
+    $result = $model->get_earned_ach_student($id);
+    $response->getBody()->write($result);
+    return $response;
+});
+
+//Get Student points
+$app->get('/api/students/{id}/points', function(Request $request, Response $response) use ($model) {
+    $id = $request->getAttribute('id');
+    $result = $model->get_total_points_for_student($id);
+    $response->getBody()->write($result);
     return $response;
 });
 
@@ -60,6 +79,10 @@ $app->delete('/api/students/{id}', function ($request, $response, $args) use ($m
     $response->getBody()->write($result);
     return $response;
 });
+
+//############## Students API ###################//
+
+
 
 // Run app
 $app->run();
