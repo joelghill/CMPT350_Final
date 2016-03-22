@@ -2,7 +2,7 @@
 
 class Model {
 
-    var $servername		= "localhost"; 
+    var $servername		= "localhost";
     var $username		= "root";
     var $password		= "";
     var $database_name 	= "";
@@ -31,7 +31,7 @@ class Model {
 	    }
 	    catch(Exception $e){
 	        echo "Database init failed: " . $e->getMessage();
-	        return FALSE; 
+	        return FALSE;
 	    }
 
     	$query = "CREATE DATABASE IF NOT EXISTS " . $dbname;
@@ -144,24 +144,23 @@ class Model {
 	        !$this->connected ||
 	        email == ""){
 	        return $this->result_message(FALSE, "Missing required parameters.");
-	    }
-	    $sql = "UPDATE students SET firstName=\"$first\", 
-		    lastName=\"$last\",
-		    email=\"$email\"
-		    WHERE studentID=$id";
-	    try { 	
+        }
+
+	    $sql = "UPDATE students SET firstName=\"$first\",
+            lastName=\"$last\",
+		    email=\"$email\" WHERE studentID=$id";
+	    try {
 	        $this->conn->exec($sql);
 	        //return "{}";
 	        return $this->result_message(TRUE, "Student edited.");
-	    } 
+	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to edit student.");    
+	        return $this->result_message(FALSE, "Failed to edit student.");
 	    }
     }
-	
+
 	/*
     get_student($stuID)
-    
     Returns record of student
     @param $stuID (int) Unique id of student record.
     @return PDOStatement object of specified student.
@@ -174,9 +173,9 @@ class Model {
         $result = ["student" => $this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC),
             "achievements" => json_decode($this->get_earned_ach_student($stuID)),
             "points" => json_decode($this->get_total_points_for_student($stuID))];
-        return json_encode($result); 
+        return json_encode($result);
     }
-	
+    
     // ############# Achievements functions ###################
     public function insert_achievement($name, $short, $long, $points, $classID){
 	    if($name == ""	    ||
@@ -188,17 +187,17 @@ class Model {
 	        return $this->result_message(FALSE, "Could not complete operation");
 	    }
 
-	    $sql = " INSERT INTO achievements(name, short_desc,long_desc, points, classID) 
+	    $sql = " INSERT INTO achievements(name, short_desc,long_desc, points, classID)
 	        VALUES ('$name', '$short', '$long', '$points', '$classID')";
-	    try { 	
+	    try {
 	        $this->conn->exec($sql);
 	        return $this->result_message(TRUE, "Achievement Added.");
-	    } 
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Failed to add achievement.");
-	    } 
+	    }
     }
-	
+
     public function edit_achievement($id, $name, $short, $long, $points, $classID){
 	    if($name == ""	    ||
 	        $short == ""    ||
@@ -208,59 +207,65 @@ class Model {
 	        !$this->connected){
 	        return $this->result_message(FALSE, "Could not complete operation");
 	    }
-	    $q = "UPDATE achievements SET name=\"$name\", 
+	    $q = "UPDATE achievements SET name=\"$name\",
 			    short_desc=\"$short\",
-			    long_desc=\"$long\", 
+			    long_desc=\"$long\",
 			    points=$points,
 			    classID=\"$classID\"
 			    WHERE achievementID=$id";
-	    try { 	
+	    try {
 	        $this->conn->exec($q);
 	        return $this->result_message(TRUE, "Achievement Edited.");
-	    } 
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Failed to edit acheivement.");
-	    } 
+	    }
     }
-	
+
     public function get_achievements(){
 	    $q = "SELECT * FROM achievements";
 	    if(!$this->connected) return;
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
-        }
-	
+    }
+
+    public function get_achievements_for_class($classID){
+        $q = "SELECT * FROM achievements WHERE classID=$classID";
+        if(!$this->connected) return "[]";
+        return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
+    }
+
     public function earn_achievement($achID, $stuID){
 	    if(!$this->connected) return;
 	    $q = "INSERT INTO achievements_earned(achievementID, studentID) VALUES($achID, $stuID)";
-	    try { 	
+	    try {
 	        $this->conn->exec($q);
 	        return $this->result_message(TRUE, "Successfully updated earned achievements.");
-	    }    
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Failed to update earned achievements.");
-	    }    
+	    }
     }
-	
+
     function get_earned_ach_student($stuID){
-	    $q = "SELECT * FROM achievements_earned RIGHT JOIN achievements AS a1 
-			    ON achievements_earned.achievementID=a1.achievementID 
+	    $q = "SELECT * FROM achievements_earned RIGHT JOIN achievements AS a1
+			    ON achievements_earned.achievementID=a1.achievementID
 			    WHERE achievements_earned.studentID=$stuID";
 	    if(!$this->connected) return;
 	    //echo(json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC)));
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
     }
-	
+
     function get_total_points_for_student($stuID){
-	    $q = "SELECT SUM(points) AS total FROM achievements_earned LEFT JOIN achievements AS a1 
-		    ON achievements_earned.achievementID=a1.achievementID 
-		    LEFT JOIN students AS s 
+	    $q = "SELECT SUM(points) AS total FROM achievements_earned LEFT JOIN achievements AS a1
+		    ON achievements_earned.achievementID=a1.achievementID
+		    LEFT JOIN students AS s
 		    ON achievements_earned.studentID = s.studentID
 		    WHERE s.studentID=$stuID";
 	    if(!$this->connected) return;
 	    //echo(json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC)));
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
     }
-	
+
     // ############# Class functions ###################
     public function add_class($name, $short, $long){
 	    if($name == ""	    ||
@@ -270,17 +275,17 @@ class Model {
 	        return $this->result_message(FALSE, "Could not complete operation");
 	    }
 
-	    $sql = " INSERT INTO classes(name, short_desc,long_desc) 
+	    $sql = " INSERT INTO classes(name, short_desc,long_desc)
 	        VALUES ('$name', '$short', '$long')";
-	    try { 	
+	    try {
 	        $this->conn->exec($sql);
 	        return $this->result_message(TRUE, "Class Added.");
-	    } 
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Failed to add Class.");
-	    } 
+	    }
     }
-	
+
     public function edit_class($id, $name, $short, $long){
 	    if($name == ""	    ||
 	        $short == ""    ||
@@ -288,70 +293,70 @@ class Model {
 	        !$this->connected){
 	        return $this->result_message(FALSE, "Could not complete operation");
 	    }
-	    $q = "UPDATE classes SET name=\"$name\", 
+	    $q = "UPDATE classes SET name=\"$name\",
 			    short_desc=\"$short\",
-			    long_desc=\"$long\"  
+			    long_desc=\"$long\"
 			    WHERE classID=$id";
-	    try { 	
+	    try {
 	        $this->conn->exec($q);
 	        return $this->result_message(TRUE, "Class Edited.");
-	    } 
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Failed to edit class.");
-	    } 
+	    }
     }
-	
+
     public function get_classes(){
 	    $q = "SELECT * FROM classes";
 	    if(!$this->connected) return;
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
     }
-	
+
     public function add_student_to_class($classID, $stuID, $isAdmin){
 	    if(!$this->connected) return;
 	    $q = "INSERT INTO class_members_def(classID, studentID, admin) VALUES($achID, $stuID, $isAdmin)";
-	    try { 	
+	    try {
 	        $this->conn->exec($q);
 	        return $this->result_message(TRUE, "Successfully updated earned achievements.");
-	    }    
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Failed to update earned achievements.");
-	    }    
+	    }
     }
-	
+
     function get_student_classes($stuID){
-	    $q = "SELECT * FROM class_members RIGHT JOIN classes AS c 
-			    ON class_members.classID=c.classID 
+	    $q = "SELECT * FROM class_members RIGHT JOIN classes AS c
+			    ON class_members.classID=c.classID
 			    WHERE class_members.studentID=$stuID";
 	    if(!$this->connected) return;
 	    //echo(json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC)));
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
     }
-    //#########---- DELETE ID FROM TABLE --- ############	
+    //#########---- DELETE ID FROM TABLE --- ############
     function delete_ID_from_table($condition, $tablename){
 	    if(!$this->connected) return;
 	    $q = "DELETE FROM $tablename WHERE $condition";
-	    try { 	
+	    try {
 	        $this->conn->exec($q);
 	        return $this->result_message(TRUE, "Value successfully deleted from table");
-	    } 
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Delete operation failed.");
-	    } 
-    }	
-	
-    //#########---- UPDATE ID FROM TABLE --- ############	
-	
+	    }
+    }
+
+    //#########---- UPDATE ID FROM TABLE --- ############
+
     function update_ID_from_table($ID, $tablename){
 	    if(!$this->connected) return;
 	    $q = "DELETE FROM $tablename WHERE $condition";
-	    try { 	
+	    try {
 	        $this->conn->exec($q);
-	        return $this->result_message(TRUE, "Update successfull."); 
-	    } 
+	        return $this->result_message(TRUE, "Update successfull.");
+	    }
 	    catch(PDOException $e) {
 	        return $this->result_message(FALSE, "Update failed.");
-	    } 
+	    }
     }
     //Return JSON formatted response  message
     function result_message($status, $message){
