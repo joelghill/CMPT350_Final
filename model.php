@@ -312,6 +312,12 @@ class Model {
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    public function get_class($id){
+	    $q = "SELECT * FROM classes WHERE classID=$id";
+	    if(!$this->connected) return;
+	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
+    }
+
     public function add_student_to_class($classID, $stuID, $isAdmin){
 	    if(!$this->connected) return;
 	    $q = "INSERT INTO class_members_def(classID, studentID, admin) VALUES($achID, $stuID, $isAdmin)";
