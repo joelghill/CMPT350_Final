@@ -7,14 +7,14 @@ use \Psr\Http\Message\ResponseInterface as Response;
 //require 'model.php';
 require_once 'index.php';
 
-$app->get('/api/students', function(Request $request, Response $response) use ($model) {
+$app->get('/students', function(Request $request, Response $response) use ($model) {
     $student = $model->get_students();
     $response->getBody()->write($student);
     return $response;
 });
 
 //Get student based on ID
-$app->get('/api/students/{id}', function(Request $request, Response $response) use ($model) {
+$app->get('/students/{id}', function(Request $request, Response $response) use ($model) {
     $id = $request->getAttribute('id');
     $student = $model->get_student($id);
     $response->getBody()->write($student);
@@ -22,7 +22,7 @@ $app->get('/api/students/{id}', function(Request $request, Response $response) u
 });
 
 //Get Student achievements
-$app->get('/api/students/{id}/achievements', function(Request $request, Response $response) use ($model) {
+$app->get('/students/{id}/achievements', function(Request $request, Response $response) use ($model) {
     $id = $request->getAttribute('id');
     $result = $model->get_earned_ach_student($id);
     $response->getBody()->write($result);
@@ -30,7 +30,7 @@ $app->get('/api/students/{id}/achievements', function(Request $request, Response
 });
 
 //Get Student points
-$app->get('/api/students/{id}/points', function(Request $request, Response $response) use ($model) {
+$app->get('/students/{id}/points', function(Request $request, Response $response) use ($model) {
     $id = $request->getAttribute('id');
     $result = $model->get_total_points_for_student($id);
     $response->getBody()->write($result);
@@ -38,7 +38,7 @@ $app->get('/api/students/{id}/points', function(Request $request, Response $resp
 });
 
 //Get Student classes
-$app->get('/api/students/{id}/classes', function(Request $request, Response $response) use ($model) {
+$app->get('/students/{id}/classes', function(Request $request, Response $response) use ($model) {
     $id = $request->getAttribute('id');
     $result = $model->get_student_classes($id);
     $response->getBody()->write($result);
@@ -46,7 +46,7 @@ $app->get('/api/students/{id}/classes', function(Request $request, Response $res
 });
 
 //POST: Creates a new student
-$app->post('/api/students', function ($request, $response, $args) use ($model) {
+$app->post('/students', function ($request, $response, $args) use ($model) {
     // Create new 
     $body = $request->getParsedBody();
     $result = $model->insert_student($body['first'], $body['last'], $body['email']);
@@ -55,7 +55,7 @@ $app->post('/api/students', function ($request, $response, $args) use ($model) {
 });
 
 //POST: addes a student to a class
-$app->post('/api/students/{id}/classes', function ($request, $response, $args) use ($model) {
+$app->post('/students/{id}/classes', function ($request, $response, $args) use ($model) {
     // Create new
     $stuID = $requset->getAttribute('id');
     $body = $request->getParsedBody();
@@ -65,7 +65,7 @@ $app->post('/api/students/{id}/classes', function ($request, $response, $args) u
 });
 
 //PUT: edits a student
-$app->put('/api/students/{id}', function ($request, $response, $args) use ($model) {
+$app->put('/students/{id}', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
     $body = $request->getParsedBody();
@@ -77,7 +77,7 @@ $app->put('/api/students/{id}', function ($request, $response, $args) use ($mode
 });
 
 //DELET: deletes a student
-$app->delete('/api/students/{id}', function ($request, $response, $args) use ($model) {
+$app->delete('/students/{id}', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
     $body = $request->getParsedBody();
@@ -87,7 +87,7 @@ $app->delete('/api/students/{id}', function ($request, $response, $args) use ($m
 });
 
 //DELET: removes a student from a class
-$app->delete('/api/students/{id}/classes', function ($request, $response, $args) use ($model) {
+$app->delete('/students/{id}/classes', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
     $body = $request->getParsedBody();

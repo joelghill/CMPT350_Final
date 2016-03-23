@@ -7,14 +7,14 @@ require_once 'model.php';
 
 //############## Achievements API ###################//
 //Get all achievements 
-$app->get('/api/achievements', function(Request $request, Response $response) use ($model) {
+$app->get('/achievements', function(Request $request, Response $response) use ($model) {
     $achievements = $model->get_achievements();
     $response->getBody()->write($achievements);
     return $response;
 });
 
 //Get achievements based on classID
-$app->get('/api/achievements/{classID}', function(Request $request, Response $response) use ($model) {
+$app->get('/achievements/{classID}', function(Request $request, Response $response) use ($model) {
     $id = $request->getAttribute('classID');
     $ach = $model->get_achievements_for_class($id);
     $response->getBody()->write($ach);
@@ -22,7 +22,7 @@ $app->get('/api/achievements/{classID}', function(Request $request, Response $re
 });
 
 //POST: Creates a new achievement 
-$app->post('/api/achievement', function ($request, $response, $args) use ($model) {
+$app->post('/achievement', function ($request, $response, $args) use ($model) {
     // Create new 
     $body = $request->getParsedBody();
     $result = $model->insert_achievement($body['name'], $body['short'], $body['long'], $body['points'], 
@@ -32,7 +32,7 @@ $app->post('/api/achievement', function ($request, $response, $args) use ($model
 });
 
 //PUT: edits an achievement
-$app->put('/api/achievements/{id}', function ($request, $response, $args) use ($model) {
+$app->put('/achievements/{id}', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
     $body = $request->getParsedBody();
@@ -45,7 +45,7 @@ $app->put('/api/achievements/{id}', function ($request, $response, $args) use ($
 });
 
 //DELET: deletes a student
-$app->delete('/api/achievement/{id}', function ($request, $response, $args) use ($model) {
+$app->delete('/achievement/{id}', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
     $body = $request->getParsedBody();

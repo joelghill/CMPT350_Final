@@ -6,7 +6,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 require_once 'index.php';
 
 //Get classes  based on classID
-$app->get('/api/classes/{id}', function(Request $request, Response $response) use ($model) {
+$app->get('/classes/{id}', function(Request $request, Response $response) use ($model) {
 
     $id = $request->getAttribute('id');
     $class = $model->get_class($id);
@@ -14,14 +14,14 @@ $app->get('/api/classes/{id}', function(Request $request, Response $response) us
     return $response;
 });
 
-$app->get('/api/classes', function(Request $request, Response $response) use ($model){
+$app->get('/classes', function(Request $request, Response $response) use ($model){
     $classes = $model->get_classes();
     $response->getBody()->write($classes);
     return $response;
 });
 
 //POST: Creates a new class
-$app->post('/api/classes', function ($request, $response, $args) use ($model) {
+$app->post('/classes', function ($request, $response, $args) use ($model) {
     // Create new 
     $body = $request->getParsedBody();
     $result = $model->add_class($body['name'], $body['short'], $body['long']);
@@ -30,7 +30,7 @@ $app->post('/api/classes', function ($request, $response, $args) use ($model) {
 });
 
 //PUT: edits a class
-$app->put('/api/classes/{id}', function ($request, $response, $args) use ($model) {
+$app->put('/classes/{id}', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
     $body = $request->getParsedBody();
@@ -42,7 +42,7 @@ $app->put('/api/classes/{id}', function ($request, $response, $args) use ($model
 });
 
 //DELETE: deletes a class
-$app->delete('/api/classes/{id}', function ($request, $response, $args) use ($model) {
+$app->delete('/classes/{id}', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
     $body = $request->getParsedBody();
