@@ -1,0 +1,170 @@
+
+$brand-color: rgb(100,100,100);
+$accent-color: darken($brand-color, 10);
+$select-color: rgb(0, 191, 255);
+$body-font: "Helvetica Neue", Arial, sans-serif;
+$header-font: "Segoe UI", "Myriad Pro", $body-font;
+$width: 960px;
+
+$logourl: "https://upload.wikimedia.org/wikipedia/en/b/bd/Random_App_Logo.png";
+$videourl: "https://youtu.be/Qqj6PK7iv7I?t=40s";
+
+body {
+    font-family: $body-font;
+    //width: $width - 2 * 10px;
+    padding:0px;
+    //background-image: url("https://upload.wikimedia.org/wikipedia/en/b/bd/Random_App_Logo.png");
+    //background-repeat: no-repeat;
+}
+ 
+h1,h2,h3,h4 {
+    font-family: $header-font;
+    z-index: -1;
+    margin-left: 5%;
+}
+ 
+h1 {
+    color:$brand-color;
+    font-size: 2em;
+}
+
+article {
+    margin-left: 25%;
+    width: 100%;
+    position: fixed;
+}
+
+div.list {
+    box-shadow: 5px 0px 10px 0px #888888;
+    width: 25%;
+    height: 100%;
+}
+ 
+section {
+    margin-left: 0;
+    .whiteHeader {
+        color: ghostwhite;
+        text-shadow: 0px 1px 1px #000000;
+        font-size: 2em;
+    }
+}
+footer {
+    position: fixed;
+    //margin-bottom: 5%;
+    z-index: 300;
+    padding: 1%;
+    bottom: 0;
+    //background: rgba(0, 0, 0, 0);
+    width: 25%;
+}
+
+form {
+    margin-left: 5%;
+}
+
+p {
+    text-align: justify;
+    //margin: 5%;
+    margin-left: 0%;
+    margin-right: 0%;
+}
+
+nav {
+   width: 25%;
+   background-color: rgba(255,255,255, 200);
+   height: 100%;
+   //border: 1px solid black;
+   //outline: black;
+   ul {
+    list-style-type: none;
+    //position: static;
+    margin: 0;
+    padding: 0;
+    width: 25%;
+    background-color: rgba(255,255,255, 0.95);
+    position: fixed;
+    //opacity: 0.5;
+    height: 100%;
+    //filter: blur(30px);
+    box-shadow: 1px 1px 10px rgba(10,10,10,0.5);
+    z-index: 150;
+    } 
+    li {
+        a {
+            margin-bottom: 0px;
+            display: block;
+            color: #000;
+            padding: 16px 20px 16px 16px;
+            text-decoration: none;
+            position: relative;
+        }
+        a.active {
+           background-color: $select-color;
+           color: white;
+        }
+        a:hover:not(.active) {
+            background-color: darken($select-color, 10);
+            color: white;
+            //box-shadow: 0px 0px 5px 1px #888888;
+        }
+    } 
+}
+.name{
+    text-transform: capitalize;
+}
+.homeText {
+    text-align: justify;
+    //margin: 5%;
+    height: 900px;
+    margin-left: 0%;
+    padding-top: 0%;
+    padding-bottom: 5%;
+    margin-right: 25%;
+    background-color: rgba(255,255,255, 0.85);
+    //box-shadow: 5px 0px 10px 0px rgba(10,10,10,0.5);
+    overflow-y: auto;
+    text-overflow: auto;
+}
+
+.homePara {
+    color: #222;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.logo {
+    max-width: 100%;
+    max-height: 100%;
+    //width: 20%
+}
+
+.fillwidth {
+    min-width: 100%;
+    height: auto;
+}
+
+.fullscreen-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -100;
+}
+
+.fullscreen-bg__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.icons {
+    display: block;
+    z-index: 300;
+    padding: 1%;
+    width: 40%;
+    float: left;
+    //box-shadow: 1px 1px 10px rgba(10,10,10,0.5);
+}

@@ -107,15 +107,16 @@ class Model {
     @post If successfull a new student is added to the database.
     @return None.
     */
-    public function insert_student($first, $last, $email){
+    public function insert_student($first, $last, $email, $facebook){
 	    //if(!$this->connected) return;
 	    if($first == "" ||
 	        $last == "" ||
-	        $email == "" ||
+            $email == "" ||
+            $facebook == "" ||
 	        !$this->connected){
 	        return $this->result_message(FALSE, "Missing required parameters.");
 	    }
-	    $sql = " INSERT INTO students(firstName, lastName,email) VALUES ('$first','$last','$email')";
+	    $sql = " INSERT INTO students(firstName, lastName, email, facebookID) VALUES ('$first','$last','$email', $facebook)";
 	    try { 	
 	        $this->conn->exec($sql);
 	        return $this->result_message(TRUE, "Student added.");
@@ -164,12 +165,32 @@ class Model {
     Returns record of student
     @param $stuID (int) Unique id of student record.
     @return PDOStatement object of specified student.
-    */
-    public function get_student($stuID){
+
+    public function get_student_FB($stuID){
 	    //echo "GET STUDENT CALLED";
 	    $q = "SELECT * FROM students WHERE students.studentID=$stuID";
 	    if(!$this->connected) return;
         //return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
+        $result = ["student" => $this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC),
+            "achievements" => json_decode($this->get_earned_ach_student($stuID)),
+            "points" => json_decode($this->get_total_points_for_student($stuID))];
+        return json_encode($result);
+    }*/
+
+	/*
+    get_student($stuID)
+    Returns record of student
+    @param $stuID (int) Unique id of student record.
+    @return PDOStatement object of specified student.
+    */
+    public function get_student($facebookID){
+	    //echo "GET STUDENT CALLED";
+	    $q = "SELECT * FROM students WHERE students.facebookID=$facebookID";
+	    if(!$this->connected) return;
+        $student = $this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC);
+        if($student == NULL) return "[]";
+
+        $stuID  = $student[0]['studentID'];
         $result = ["student" => $this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC),
             "achievements" => json_decode($this->get_earned_ach_student($stuID)),
             "points" => json_decode($this->get_total_points_for_student($stuID))];

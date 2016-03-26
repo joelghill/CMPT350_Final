@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Student Achievement App</title>
+	<meta charset=“UTF-8”>
+    <link rel="stylesheet" type="text/css" href="stylesheets/css/stylesheet.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> 
+    <script>
+   		//document.getElementById("submit_form").onclick = function() {console.log("buttonclicked")};
+   		function deleteClick(index){
+   			var number = parseInt(index);
+   			var clickBtnValue = 'delete'
+       		data =  {'action': clickBtnValue, 'id': number};
+        	$.post('./studentsController.php', data, function (response) {
+            		location.reload();
+            });
+   		}
+   		
+   		function viewClick(index){
+   			var number = parseInt(index);
+   			window.location.href = "Student.html?id="+number
+   		}
+   		
+   		function createStudentButtons(index){
+   			var viewString = "<button id=view"+index.toString+" value="+i.toString+
+   				" onClick=\"viewClick("+index+")\">View Profile</button>"
+   			var deleteString = "<button id=delete"+index+" value="+i.toString+
+   				" onClick=\"deleteClick("+index+")\">Delete Entry</button>"
+   			return viewString+deleteString;
+   		}
+   		function getStudents(){
+   			var clickBtnValue = 'students'
+        	var ajaxurl = './studentsController.php'
+       		data =  {'action': clickBtnValue};
+        	$.post(ajaxurl, data, function (response) {
+            		//console.log("Response: "+response);
+            		json = JSON.parse(response)
+            		for(i = 0; i < json.length; i++){
+            			// Find a <table> element with id="myTable":
+						var table = document.getElementById("students_table");
+						// Create an empty <tr> element and add it to the 1st position of the table:
+						var row = table.insertRow(1);
+						var id = row.insertCell(0);
+						var first = row.insertCell(1);
+						var last = row.insertCell(2);
+						var date 	= row.insertCell(3);
+						var buttons = row.insertCell(4);
+						// Add some text to the new cells:
+						id.innerHTML = json[i].studentID;
+						first.innerHTML = json[i].firstName;
+						last.innerHTML = json[i].lastName;
+						date.innerHTML = json[i].reg_date;
+						buttons.innerHTML = createStudentButtons(json[i].studentID);
+						//assignEvents(i);
+            		}
+            });
+   		}
+   		function submitForm(){
+   			var form_id = document.getElementById('form_id');
+   			var clickBtnValue;
+   			if(!form_id.checkValidity()){
+   				clickBtnValue = 'insert'
+   			}else{
+   				console.log("Editing: " + form_id.value)
+   				clickBtnValue = 'edit'
+   			}
+        	var ajaxurl = './studentsController.php'
+        	var firstname = document.getElementById('firstname').value;
+        	var lastname = document.getElementById('lastname').value;
+        	var email = document.getElementById('email').value;
+       		data =  {'action': clickBtnValue, 'firstname': firstname, 
+       			'lastname':lastname, 'email':email, 'id': form_id.value};
+        	$.post(ajaxurl, data, function (response) {
+            		location.reload();
+            });
+   		}
+        $(document).ready(function(){
+        	//document.getElementById("submit_form").onclick = function() {submitForm()};
+			getStudents();
+            $("#navpanel").load("navpanel.html", function(){
+                $("#home_tab").toggleClass("active")
+            });
+            
+            $("#achievement_form").submit(function(event){
+            	event.preventDefault();
+                var firstname  = (document.getElementById("firstname")).checkValidity();
+                var lastname = (document.getElementById("lastname")).checkValidity();
+                var email  = (document.getElementById("email")).checkValidity();
+                if(firstname && lastname && email){
+                    //alert("Your information has been submitted");
+                    submitForm();
+                    
+                }else{
+                    alert("Please fill out all fields.");
+                }
+           });
+        });
+    </script>
+           
+</head>
+<body>
+    <nav id="navpanel"></nav>
+    <article>
+    	<div style= "overflow:auto">
+		   <section>
+			   <h1>Students</h1>
+			   <div style= "margin-left:5%; overflow:auto">
+					<table id="students_table" style="width:50%">
+						<tr>
+							<td><b>ID</b></td>
+							<td><b>First Name</b></td>
+							<td><b>Last Name</b></td>
+							<td><b>Date Added</b></td>
+						</tr>
+					</table>
+				</div>
+		   </section>
+		   <section>
+			   <h3>Add/Edit Student</h3>
+			   <form id="achievement_form">
+					<p>*Specify an existing ID to edit current entry</p>
+				   <table>
+					   <tr>
+							<td>Id*:</td>
+						   <td><input id="form_id" type="text" name="firstName" required></td>
+						   <td>First Name:</td>
+						   <td><input id="firstname" type="text" name="firstName" required></td>
+						   <td>Last Name:</td>
+						   <td><input id = "lastname" type="text" name=lastName" required></td>
+							<td>Email:</td>
+						   <td><input id = "email" type="email" name="email" required></td>
+					   </tr>
+				   </table>
+				   <input type="submit" value="Submit">
+				</form>
+		   </section>
+		</div>
+    </article>
+</body>
+</html>

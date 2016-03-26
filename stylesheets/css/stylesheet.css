@@ -1,0 +1,124 @@
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  padding: 0px; }
+
+h1, h2, h3, h4 {
+  font-family: "Segoe UI", "Myriad Pro", "Helvetica Neue", Arial, sans-serif;
+  z-index: -1;
+  margin-left: 5%; }
+
+h1 {
+  color: #646464;
+  font-size: 2em; }
+
+article {
+  margin-left: 25%;
+  width: 100%;
+  position: fixed; }
+
+div.list {
+  box-shadow: 5px 0px 10px 0px #888888;
+  width: 25%;
+  height: 100%; }
+
+section {
+  margin-left: 0; }
+  section .whiteHeader {
+    color: ghostwhite;
+    text-shadow: 0px 1px 1px #000000;
+    font-size: 2em; }
+
+footer {
+  position: fixed;
+  z-index: 300;
+  padding: 1%;
+  bottom: 0;
+  width: 25%; }
+
+form {
+  margin-left: 5%; }
+
+p {
+  text-align: justify;
+  margin-left: 0%;
+  margin-right: 0%; }
+
+nav {
+  width: 25%;
+  background-color: white;
+  height: 100%; }
+  nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;
+    background-color: rgba(255, 255, 255, 0.95);
+    position: fixed;
+    height: 100%;
+    box-shadow: 1px 1px 10px rgba(10, 10, 10, 0.5);
+    z-index: 150; }
+  nav li a {
+    margin-bottom: 0px;
+    display: block;
+    color: #000;
+    padding: 16px 20px 16px 16px;
+    text-decoration: none;
+    position: relative; }
+  nav li a.active {
+    background-color: deepskyblue;
+    color: white; }
+  nav li a:hover:not(.active) {
+    background-color: #0099cc;
+    color: white; }
+
+.name {
+  text-transform: capitalize; }
+
+.homeText {
+  text-align: justify;
+  height: 900px;
+  margin-left: 0%;
+  padding-top: 0%;
+  padding-bottom: 5%;
+  margin-right: 25%;
+  background-color: rgba(255, 255, 255, 0.85);
+  overflow-y: auto;
+  text-overflow: auto; }
+
+.homePara {
+  color: #222;
+  margin-left: 5%;
+  margin-right: 5%; }
+
+.logo {
+  max-width: 100%;
+  max-height: 100%; }
+
+.fillwidth {
+  min-width: 100%;
+  height: auto; }
+
+.fullscreen-bg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: -100; }
+
+.fullscreen-bg__video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
+.icons {
+  display: block;
+  z-index: 300;
+  padding: 1%;
+  width: 40%;
+  float: left; }
+
+/*# sourceMappingURL=stylesheet.css.map */

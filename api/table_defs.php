@@ -4,7 +4,8 @@
 		studentID int UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 		lastName varchar(255) NOT NULL,
 		firstName varchar(255)NOT NULL,
-		email varchar(255) NOT NULL,
+        email varchar(255) NOT NULL,
+        facebookID varchar(20),
 		reg_date TIMESTAMP
 		)";
 		

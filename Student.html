@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title id="studentTitle" >Student</title>
+	<meta charset=“UTF-8”>
+    <link rel="stylesheet" type="text/css" href="stylesheets/css/stylesheet.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> 
+    <script>
+    
+    	function deleteClick(index){
+   			var number = parseInt(index);
+   			var clickBtnValue = 'delete'
+       		data =  {'action': clickBtnValue, 'id': number};
+        	$.post('./student_achieve_controller.php', data, function (response) {
+            		//console.log("Response: "+response);
+            		alert(response);
+            		location.reload();
+            });
+   		}
+   		
+   		function createButtons(index){
+   			var deleteString = "<button id=delete"+index+" value="+i.toString+
+   				" onClick=\"deleteClick("+index+")\">Delete</button>"
+   			return deleteString;
+   		}
+    	function getPoints(id){
+    		ajaxurl = './student_achieve_controller.php';
+    		data = {'action': 'total', 'id': id}
+    		$.post(ajaxurl, data, function (response) {
+            		//console.log("Response: "+response);
+            		json = JSON.parse(response)
+            		var header = document.getElementById("student_points");
+        			header.innerHTML = json[0].total + " total points"
+					return json[0].total;
+            });
+    	}
+    	function getStudent(id){
+    		ajaxurl = './studentsController.php';
+    		data = {'action': 'student', 'id': id}
+    		$.post(ajaxurl, data, function (response) {
+            		//console.log("Response: "+response);
+            		json = JSON.parse(response)
+            		var header = document.getElementById("student_header");
+        			header.innerHTML = json[0].firstName + " " + json[0].lastName
+					return json[0];
+            });
+    	}
+    	function getEarnedAchievements(id){
+   			var clickBtnValue = 'achievements'
+        	var ajaxurl = './student_achieve_controller.php'
+       		data =  {'action': clickBtnValue, 'id': id};
+       		console.log(data)
+        	$.post(ajaxurl, data, function (response) {
+            		//console.log("Response: "+response);
+            		json = JSON.parse(response)
+            		console.log(response);
+            		for(i = 0; i < json.length; i++){
+            			// Find a <table> element with id="myTable":
+						var table = document.getElementById("achievements_table");
+						// Create an empty <tr> element and add it to the 1st position of the table:
+						var row = table.insertRow(1);
+						var id = row.insertCell(0);
+						var name = row.insertCell(1);
+						var points = row.insertCell(2);
+						var shortD = row.insertCell(3);
+						var buttons = row.insertCell(4);
+						// Add some text to the new cells:
+						id.innerHTML = json[i].achievementID;
+						name.innerHTML = json[i].name;
+						shortD.innerHTML = json[i].short_desc;
+						points.innerHTML = json[i].points;
+						buttons.innerHTML = createButtons(json[i].earnedID);
+						//assignEvents(i);
+            		}
+            });
+   		}
+
+    	function getUrlVars() {
+    		var vars = {};
+   			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        	vars[key] = value;
+    		});
+   			return vars;
+		}
+		function submitForm(sid, aid){
+   			var clickBtnValue = 'insert'
+        	var ajaxurl = './student_achieve_controller.php'
+       		data =  {'action': clickBtnValue, 'achID': aid, 'studentID': sid};
+        	$.post(ajaxurl, data, function (response) {
+            		//console.log("Response: "+response);
+            		location.reload();
+            });
+   		}
+		
+        $(document).ready(function(){
+        	var params = getUrlVars();
+        	getEarnedAchievements(params['id']);
+        	var points = getPoints(params['id']);
+        	var studentInfo = getStudent(params['id'])
+            $("#navpanel").load("navpanel.html");
+            
+            $("form").submit(function(event){
+            	event.preventDefault();
+            	var params = getUrlVars();
+                var stuID  = params['id'];
+                var archID = (document.getElementById("ach_ID")).checkValidity();
+                if(stuID && archID){
+                    //alert("Your information has been submitted");
+                    submitForm(stuID, document.getElementById("ach_ID").value);   
+                }else{
+                    alert("Please fill out all forms.");
+                }
+           });
+        });
+	</script>       
+</head>
+<body>
+    <nav id="navpanel"></nav>
+   <article>
+       <section>
+           <h1>Student Profile</h1>
+       </section>
+       <div id="student" style="left-margin">
+       		<h2 id="student_header">Name	Points</h2>
+       		<h3 id="student_points">Name	Points</h3>
+       </div>
+       
+        <div style= "margin-left:5%">
+           	<table id="achievements_table" style="width:50%">
+                <tr>
+                	<td><b>ID</b></td>
+                    <td><b>Name</b></td>
+                    <td><b>Points</b></td>
+                    <td><b>Short Description</b></td>
+                </tr>
+            </table>
+        </div>
+        <h3>Add New Achievement</h3>
+           <form id="achievement_form">
+               <table>
+                   <tr>
+                       <td>AchievementID:</td>
+                       <td><input id="ach_ID" type="number" name="achID" required></td>
+                       <td><input type="submit"></td>
+                   </tr>
+               </table>
+            </form>
+   </article>
+</body>
+</html>
