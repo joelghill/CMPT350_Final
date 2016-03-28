@@ -1,14 +1,22 @@
 
 var apiBase = 'http://localhost:8888/api/index.php/'; 
-var app = angular.module('main', []);
+var app = angular.module('main', ['classes']);
 
 app.controller('fbUser', ['$scope','srvAuth', function($scope, srvAuth){
     this.user = {};
+    this.data = {};
+    this.loggedIn = false;
     var _self = this;
     $scope.$on('fbUserAvailable', function(){
-        console.log(srvAuth.user);
-        _self.user = srvAuth.user;
+        console.log(srvAuth.data.student);
+        _self.data = srvAuth.data;
+        _self.loggedIn = true;
     });
+
+    this.logOut = function(){
+        srvAuth.logout();
+    };
+
 }]);
 
 app.factory('srvAuth', ['$rootScope', '$http', function ($rootScope, $http){
@@ -25,12 +33,34 @@ app.factory('srvAuth', ['$rootScope', '$http', function ($rootScope, $http){
         });
     };
     
+    this.registerStudent = function(){
+        var _self = this;
+        $http.post(apiBase+'students', 
+        {first: this.user.first_name, 
+        last: this.user.last_name, 
+        email: this.user.email, 
+        facebook: this.user.id}).success(function(data){
+            if(data['result']){
+                $http.get(apiBase+'students/'+_self.user.id).success(function(data){
+                    _self.data = data;
+                    _self.broadcastUser();
+                });    
+            }
+
+        });
+    };
+
     this.checkRegistration = function(){
         var _self = this;
         console.log("Checking registration.....");
         $http.get(apiBase+'students/'+this.user.id).success(function(data){
-            console.log(data);
-            _self.broadcastUser();
+            if(data.length == 0){
+                console.log("REgistration required...");
+                _self.registerStudent();
+            }else{
+                _self.data = data;
+                _self.broadcastUser();
+            }
         });        
     };
 
@@ -50,10 +80,13 @@ app.factory('srvAuth', ['$rootScope', '$http', function ($rootScope, $http){
     };
 
     this.logout = function(){
+        console.log("Logged out");
         var _self = this;
+        _self.loggedIn = false;
         FB.logout(function(res){
             $rootScope.$apply(function(){
                 $rootScope.user = _self.user = {};
+                _self.data = {};
             });
         });
     };

@@ -22,7 +22,8 @@
 	$create_achievements_earned_table = "CREATE TABLE achievements_earned(
 		earnedID int UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 		achievementID int UNSIGNED NOT NULL,
-		studentID int UNSIGNED NOT NULL,
+        studentID int UNSIGNED NOT NULL,
+        has_viewed BOOL DEFAULT FALSE,
 		acheived_date TIMESTAMP
         )";
     
@@ -37,6 +38,7 @@
         memberID int UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         classID int UNSIGNED NOT NULL,
         studentID int UNSIGNED NOT NULL,
+        isMember BOOL DEFAULT FALSE,
         admin BOOL DEFAULT FALSE)";
 	
 	$tables_list = [

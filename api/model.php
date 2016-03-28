@@ -191,7 +191,7 @@ class Model {
         if($student == NULL) return "[]";
 
         $stuID  = $student[0]['studentID'];
-        $result = ["student" => $this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC),
+        $result = ["student" => $student[0],
             "achievements" => json_decode($this->get_earned_ach_student($stuID)),
             "points" => json_decode($this->get_total_points_for_student($stuID))];
         return json_encode($result);

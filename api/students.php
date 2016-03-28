@@ -49,7 +49,7 @@ $app->get('/students/{id}/classes', function(Request $request, Response $respons
 $app->post('/students', function ($request, $response, $args) use ($model) {
     // Create new 
     $body = $request->getParsedBody();
-    $result = $model->insert_student($body['first'], $body['last'], $body['email']);
+    $result = $model->insert_student($body['first'], $body['last'], $body['email'], $body['facebook']);
     $response->getBody()->write($result);
     return $response;
 });

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html ng-app="main">
     <head>
-        <title>Facebook Login JavaScript Example</title>
+        <title>Academic Achievements App</title>
         <meta charset="UTF-8">
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script> 
         <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" src="classesApp.js"></script>
     </head>
     <body>
 
@@ -14,11 +15,15 @@
               the FB.login() function when clicked.
     -->
     <div ng-controller = "fbUser as fb">
-        <p>Name: {{fb.user.last_name}}</p>
-        <p>id: {{fb.user.id}}</p>
-        <p>email: {{fb.user.email}}</p>
+        <div ng-show="fb.loggedIn">
+            <div ng-include="'main.html'"></div>
+        </div>
+        <div ng-hide="fb.loggedIn">
+            <fb:login-button show-faces="true" max-rows="1" 
+            size="large"></fb:login-button>
+        </div>
+        <div ng-controller="classes as c">
+        </div>
     </div>
-    <fb:login-button show-faces="true" max-rows="1" 
-        size="large"></fb:login-button>
     </body>
 </html>
