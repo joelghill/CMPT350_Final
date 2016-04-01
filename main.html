@@ -1,4 +1,4 @@
-
+<!--
 <h>YOU ARE LOGGED IN, WOOOOO!!!</h>
 <p>Name: {{fb.data.student.firstName}} {{fb.data.student.lastName}}</p>
 <p>id: {{fb.data.student.studentID}}</p>
@@ -6,4 +6,31 @@
 <p>Logged in: {{fb.loggedIn}}</p>
 <button ng-click="fb.logOut()">
     Log Out
-</button>
+</button>i
+-->
+<div class="container">
+    <h2>{{fb.data.student.firstName}} {{fb.data.student.lastName}}</h2>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
+        <li><a data-toggle="pill" href="#Classes">Classes</a></li>
+        <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
+        <li><a data-toggle="pill" href="#menu3">Menu 3</a></li>
+    </ul>
+                                
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            <div ng-include="'home.html'">TEST</div>
+        </div>
+        <div id="Classes" class="tab-pane fade">
+            <div ng-include="'classes.html'"></div>
+        </div>
+        <div id="menu2" class="tab-pane fade">
+            <h3>Menu 2</h3>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+        </div>
+        <div id="menu3" class="tab-pane fade">
+            <h3>Menu 3</h3>
+            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        </div>
+    </div>
+</div>
