@@ -1,16 +1,18 @@
 
 var apiBase = 'http://localhost:8888/api/index.php/'; 
-var app = angular.module('main', ['classes']);
+var app = angular.module('main', []);
 
 app.controller('fbUser', ['$scope','srvAuth', function($scope, srvAuth){
     this.user = {};
     this.data = {};
+    $scope.user = {};
     this.loggedIn = false;
     var _self = this;
     $scope.$on('fbUserAvailable', function(){
-        console.log(srvAuth.data.student);
+        console.log(srvAuth.data);
         _self.data = srvAuth.data;
         _self.loggedIn = true;
+        $scope.user = srvAuth.data;
     });
 
     this.logOut = function(){
