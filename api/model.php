@@ -359,6 +359,15 @@ class Model {
 	    //echo(json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC)));
 	    return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
     }
+
+    function get_students_in_class($classID){
+        $q = "SELECT * FROM class_members RIGHT JOIN students AS s
+            ON class_members.studentID=s.studentID
+            WHERE class_members.classID=$classID";
+        if(!$this->connected) return;
+        return json_encode($this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC));
+    }
+
     //#########---- DELETE ID FROM TABLE --- ############
     function delete_ID_from_table($condition, $tablename){
 	    if(!$this->connected) return;

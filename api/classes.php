@@ -14,6 +14,14 @@ $app->get('/classes/{id}', function(Request $request, Response $response) use ($
     return $response;
 });
 
+//Get students enrolled in class
+$app->get('/classes/{id}/students', function(Request $request, Response $response) use ($model) {
+    $id = $request->getAttribute('id');
+    $class = $model->get_students_in_class($id);
+    $response->getBody()->write($class);
+    return $response;
+});
+
 $app->get('/classes', function(Request $request, Response $response) use ($model){
     $classes = $model->get_classes();
     $response->getBody()->write($classes);
