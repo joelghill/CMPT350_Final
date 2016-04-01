@@ -11,22 +11,31 @@
         <script type="text/javascript" src="app.js"></script>
         <script type="text/javascript" src="classesApp.js"></script>
         
+        <!-- MATERIAL ICON FONT -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
         <!--BOOTSTRAP INCLUSION-->
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
         integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" 
         crossorigin="anonymous">
-
-        <!-- Optional theme -->
+        
+        <!-- Custom CSS Sidebar theme-->
+        <link href="css/bootstrap.css" rel="stylesheet">
+        
+        <!-- Optional theme 
         <link rel="stylesheet" 
         href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" 
         integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" 
-        crossorigin="anonymous">
+        crossorigin="anonymous">-->
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" 
         crossorigin="anonymous"></script>
+        
+        <!-- jQuery -->
+        <script src="js/jquery.js"></script>
     </head>
     <body>
 
@@ -35,15 +44,11 @@
             the JavaScript SDK to present a graphical Login button that triggers
               the FB.login() function when clicked.
     -->
-    <div class="container" ng-controller = "fbUser as fb">
-        <div class="jumbotron" ng-show="fb.loggedIn">
-            <div ng-include="'main.html'"></div>
-        </div>
+    <div ng-controller = "fbUser as fb">
+        <div ng-include="'main.html'" ng-show="fb.loggedIn"></div>
         <div ng-hide="fb.loggedIn">
             <fb:login-button show-faces="true" max-rows="1" 
             size="large"></fb:login-button>
-        </div>
-        <div ng-controller="classes as c">
         </div>
     </div>
     </body>
