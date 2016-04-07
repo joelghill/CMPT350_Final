@@ -1,0 +1,26 @@
+<!-- Modal content-->
+<div id="joinModal" class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()">&times;</button>
+        <h4 class="modal-title">Add a New Class</h4>
+    </div>
+    <div class="modal-body">
+        <p>Enter the name, short description, and long description below.</p>
+        <div class = "row">
+        <div class = "col-md-12">        
+        <form name="newClass" ng-submit="ok()" class="form">
+            <input type="text" placeholder="Class Name" ng-model="cName" class="form-control" required/>
+            <input type="text" class="form-control" style="min-width: 95%%; max-width: 100%" 
+                placeholder="Short description" ng-model="cShort" required/>
+            <textarea type="text" class="form-control" style="min-width: 95%%; max-width: 100%" 
+                placeholder="Detailed Description of Class" ng-model="cLong" required/>
+            <input type="submit" class="form-control btn  btn-primary pull-right"
+             ng-disabled="!formOK()">
+        </form>
+        </div><!-- end col-->
+        </div><!-- end row-->
+    </div>
+</div>
+
+
+
