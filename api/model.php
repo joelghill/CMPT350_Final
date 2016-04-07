@@ -119,10 +119,10 @@ class Model {
 	    $sql = " INSERT INTO students(firstName, lastName, email, facebookID) VALUES ('$first','$last','$email', $facebook)";
 	    try { 	
 	        $this->conn->exec($sql);
-	        return $this->result_message(TRUE, "Student added.");
+	        return $this->result_message(TRUE, "Student added.","students");
 	    } 
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to add student");
+	        return $this->result_message(FALSE, "Failed to add student","null");
 	    }    
     }
     /*
@@ -153,10 +153,10 @@ class Model {
 	    try {
 	        $this->conn->exec($sql);
 	        //return "{}";
-	        return $this->result_message(TRUE, "Student edited.");
+	        return $this->result_message(TRUE, "Student edited.","students");
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to edit student.");
+	        return $this->result_message(FALSE, "Failed to edit student.","null");
 	    }
     }
 
@@ -212,10 +212,10 @@ class Model {
 	        VALUES ('$name', '$short', '$long', '$points', '$classID')";
 	    try {
 	        $this->conn->exec($sql);
-	        return $this->result_message(TRUE, "Achievement Added.");
+	        return $this->result_message(TRUE, "Achievement Added.","achievements");
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to add achievement.");
+	        return $this->result_message(FALSE, "Failed to add achievement.","null");
 	    }
     }
 
@@ -236,10 +236,10 @@ class Model {
 			    WHERE achievementID=$id";
 	    try {
 	        $this->conn->exec($q);
-	        return $this->result_message(TRUE, "Achievement Edited.");
+	        return $this->result_message(TRUE, "Achievement Edited.","achievements");
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to edit acheivement.");
+	        return $this->result_message(FALSE, "Failed to edit acheivement.", "null");
 	    }
     }
 
@@ -260,10 +260,11 @@ class Model {
 	    $q = "INSERT INTO achievements_earned(achievementID, studentID) VALUES($achID, $stuID)";
 	    try {
 	        $this->conn->exec($q);
-	        return $this->result_message(TRUE, "Successfully updated earned achievements.");
+            return $this->result_message(TRUE, "Successfully updated earned achievements."
+                ,"achievements_earned");
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to update earned achievements.");
+	        return $this->result_message(FALSE, "Failed to update earned achievements.", "null");
 	    }
     }
 
@@ -300,10 +301,10 @@ class Model {
 	        VALUES ('$name', '$short', '$long')";
 	    try {
 	        $this->conn->exec($sql);
-	        return $this->result_message(TRUE, "Class Added.");
+	        return $this->result_message(TRUE, "Class Added.", "classes");
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to add Class.");
+	        return $this->result_message(FALSE, "Failed to add Class.","null");
 	    }
     }
 
@@ -320,10 +321,10 @@ class Model {
 			    WHERE classID=$id";
 	    try {
 	        $this->conn->exec($q);
-	        return $this->result_message(TRUE, "Class Edited.");
+	        return $this->result_message(TRUE, "Class Edited.","classes");
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to edit class.");
+	        return $this->result_message(FALSE, "Failed to edit class.","null");
 	    }
     }
 
@@ -341,13 +342,14 @@ class Model {
 
     public function add_student_to_class($classID, $stuID, $isAdmin){
 	    if(!$this->connected) return;
-	    $q = "INSERT INTO class_members_def(classID, studentID, admin) VALUES($achID, $stuID, $isAdmin)";
+	    $q = "INSERT INTO class_members(classID, studentID, admin) VALUES($classID, $stuID, $isAdmin)";
 	    try {
 	        $this->conn->exec($q);
-	        return $this->result_message(TRUE, "Successfully updated earned achievements.");
+	        return $this->result_message(TRUE, "Successfully added student to class.", "class_members");
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Failed to update earned achievements.");
+            //return $e;
+            return $this->result_message(FALSE, $e->getMessage() , "null");
 	    }
     }
 
@@ -374,10 +376,10 @@ class Model {
 	    $q = "DELETE FROM $tablename WHERE $condition";
 	    try {
 	        $this->conn->exec($q);
-	        return $this->result_message(TRUE, "Value successfully deleted from table");
+	        return $this->result_message(TRUE, "Value successfully deleted from table", $tablename);
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Delete operation failed.");
+	        return $this->result_message(FALSE, "Delete operation failed.","null");
 	    }
     }
 
@@ -388,18 +390,31 @@ class Model {
 	    $q = "DELETE FROM $tablename WHERE $condition";
 	    try {
 	        $this->conn->exec($q);
-	        return $this->result_message(TRUE, "Update successfull.");
+	        return $this->result_message(TRUE, "Update successfull.", $tablename);
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Update failed.");
+	        return $this->result_message(FALSE, "Update failed.", "null");
 	    }
     }
     //Return JSON formatted response  message
-    function result_message($status, $message){
+    function result_message($status, $message, $table){
 	    $result = [ "result" => $status,
-		    "message" => $message
+            "message" => $message,
+            "data"  => $this->get_recent($table)
 		];
 	    return json_encode($result);
+    }
+
+    function get_recent($table){
+        if($table == "null"){
+            return "";
+        }
+        $q = "SELECT * FROM $table order by date desc limit 1";
+        try {
+            return $this->conn->query($q)->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $e){
+            return $e;
+        }
     }
 }
 
