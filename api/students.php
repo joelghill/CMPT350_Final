@@ -57,9 +57,10 @@ $app->post('/students', function ($request, $response, $args) use ($model) {
 //POST: addes a student to a class
 $app->post('/students/{id}/classes', function ($request, $response, $args) use ($model) {
     // Create new
-    $stuID = $requset->getAttribute('id');
+    $stuID = $request->getAttribute('id');
     $body = $request->getParsedBody();
-    $result = $model->add_student_to_class($stuID, $body['classID'], $body['admin']);
+    //echo("Got parsed bpdy....");
+    $result = $model->add_student_to_class($body['classID'], $stuID, $body['admin']);
     $response->getBody()->write($result);
     return $response;
 });
