@@ -6,7 +6,7 @@
 		firstName varchar(255)NOT NULL,
         email varchar(255) NOT NULL,
         facebookID varchar(20),
-		reg_date TIMESTAMP
+		date TIMESTAMP
 		)";
 		
 	$create_achievements_table = "CREATE TABLE achievements(
@@ -16,7 +16,7 @@
 		long_desc VARCHAR(400) NOT NULL,
 		points int NOT NULL,
 		classID int NOT NULL,
-		creation_date TIMESTAMP
+		date TIMESTAMP
 		)";
 		
 	$create_achievements_earned_table = "CREATE TABLE achievements_earned(
@@ -24,7 +24,7 @@
 		achievementID int UNSIGNED NOT NULL,
         studentID int UNSIGNED NOT NULL,
         has_viewed BOOL DEFAULT FALSE,
-		acheived_date TIMESTAMP
+		date TIMESTAMP
         )";
     
     $classes_def = "CREATE TABLE classes(
@@ -32,14 +32,15 @@
         name VARCHAR(255) NOT NULL,
         short_desc VARCHAR(255) NOT NULL,
         long_desc VARCHAR(400) NOT NULL,
-        creation_date TIMESTAMP)";
+        date TIMESTAMP)";
 
     $class_members_def = "CREATE TABLE class_members(
         memberID int UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         classID int UNSIGNED NOT NULL,
         studentID int UNSIGNED NOT NULL,
         isMember BOOL DEFAULT FALSE,
-        admin BOOL DEFAULT FALSE)";
+        admin BOOL DEFAULT FALSE,
+        date TIMESTAMP)";
 	
 	$tables_list = [
 		"students" => $create_student_table,
