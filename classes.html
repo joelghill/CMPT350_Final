@@ -1,4 +1,68 @@
 <div ng-controller="classes as cl">
+    <div class="row">
+    <div ng-controller="classAddController">
+        <button type="button" class="btn btn-primary" ng-click="open()">Add Class</button>
+    </div>
+    <div ng-show="studentAdminClasses.length == 0">
+        <h3>You do not appear to moderate any classes....</h3>
+        <p>Feel free to create a new class for others to join.</p>
+    </div>
+    <div ng-hide="studentAdminClasses.length == 0">
+        <h3>Your Classes</h3>
+    </div>
+    </div> <!--end row-->
+    <div class="row">
+        <table class="table">
+            <thead>
+                <th>Name</th>
+                <th>Description</th>
+            </thead>
+            <tbody> 
+                <tr ng-repeat-start="class in studentAdminClasses track by $index">
+                    <td>{{ class.name }}</td>
+                    <td>{{ class.short_desc }}</td>
+                    <td>
+                        <button class="btn-sm btn-info" data-toggle="collapse" 
+                            data-target="#more{{$index}}" 
+                            ng-click="getStudents(1)">
+                            <i class="material-icons md-48" style="vertical-align: middle;">info</i>
+                        </button>
+                        <button class="btn-sm btn-primary">
+                            <i class="material-icons md-48" style="vertical-align: middle;">grade</i> 
+                        </button>
+                    </td>
+                </tr>
+                <tr ng-repeat-end> 
+                    <td colspan="3" style="border-top: none">
+                        <div id="more{{$index}}" class="collapse">
+                            {{class.long_desc}}
+                            <div>
+                                <table class="table">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Email</>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="student in studentList">
+                                            <td>{{student.firstName}} {{student.lastName}}</td>
+                                            <td>{{student.email}}</td>
+                                            <td>
+                                                <button class="btn-sm btn-danger">
+                                                    <i class="material-icons md-48" 
+                                                        style="vertical-align: middle;">delete</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3>Classes Participating In</h3>
     <table class="table">
         <thead>
             <th>Name</th>
@@ -9,7 +73,7 @@
                 <td>{{ class.name }}</td>
                 <td>{{ class.short_desc }}</td>
                 <td>
-                    <button class="btn-sm btn-info" data-toggle="collapse" data-target="#more{{$index}}">
+                    <button class="btn-sm btn-info" data-toggle="collapse" data-target="#av_more{{$index}}">
                         <i class="material-icons md-48" style="vertical-align: middle;">info</i>
                     </button>
                     <button class="btn-sm btn-primary">
@@ -19,12 +83,13 @@
             </tr>
             <tr ng-repeat-end> 
                 <td colspan="3" style="border-top: none">
-                    <div id="more{{$index}}" class="collapse">{{class.long_desc}}</div>
+                    <div id="av_more{{$index}}" class="collapse">{{class.long_desc}}</div>
                 </td>
             </tr>
         </tbody>
     </table>
-    <p>{{classes[0].name}}</p>
-    <p>{{studentClasses[0].name}}</p>
+    <div ng-controller="classSearchController">
+        <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
+    </div>
 
 </div>
