@@ -1,6 +1,6 @@
 
 var apiBase = 'http://localhost:8888/api/index.php/'; 
-var app = angular.module('main', []);
+var app = angular.module('main', ['ui.bootstrap']);
 
 app.controller('fbUser', ['$scope','srvAuth', function($scope, srvAuth){
     this.user = {};
