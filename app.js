@@ -1,5 +1,5 @@
 
-var apiBase = 'http://localhost:8888/api/index.php/'; 
+var apiBase = 'http://52.37.80.104/api/'; 
 var app = angular.module('main', ['ui.bootstrap']);
 
 app.controller('fbUser', ['$scope','srvAuth', function($scope, srvAuth){

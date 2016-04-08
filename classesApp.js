@@ -1,4 +1,5 @@
- app.controller('classes', ['$http', '$scope', function($http, $scope){
+ app.controller('classes', ['$http', '$scope','$uibModal', '$log', 
+ function($http, $scope, $uibModal, $log){
     $scope.classes = [];
     //$rootscope.classes = [];
     $scope.studentClasses = [];
@@ -23,17 +24,38 @@
     $scope.getStudentClasses = function() {
         console.log("get student classes called for:" + $scope.student["studentID"]);
         $http.get(apiBase + 'students/' + $scope.student["studentID"] + '/classes').then(function(r){
-            $scope.studentClasses = r.data;
-            console.log($scope.studentClasses);
-            $scope.studentAdminClasses = $scope.studentClasses.filter(function(c){
-                return (true);
+            $scope.studentClasses = r.data.filter(function(c){
+                return (c.admin == 0);
             });
+            $scope.studentAdminClasses = r.data.filter(function(c){
+                return (c.admin==1);
+            });
+            $scope.classes = r.data;
+            console.log($scope.classes);
         });
     };
 
     $scope.getStudents = function(classID){
         $http.get(apiBase + 'classes/'+classID+'/students').then(function(r){
             $scope.studentList = r.data;    
+        });
+    };
+
+    $scope.deleteClass = function(classID){
+        $http.delete(apiBase + 'classes/'+classID).success(function(data){
+            console.log(data);
+            $scope.getStudentClasses();    
+        }).error(function(){
+            $scope.getStudentClasses();
+        });    
+    };
+
+    $scope.removeStudent = function(cID, stuID){
+        $http.delete(apiBase + 'students/'+stuID+'/classes/'+cID).success(function(data){
+            console.log(data);
+            $scope.getStudentClasses();
+        }).error(function(){
+            
         });
     };
 
@@ -44,12 +66,35 @@
         });
     });
 
-}]);
+    $scope.openAddClass = function (current_class) {
+    var modalInstance = $uibModal.open({
+        animation: $scope.animationsEnabled,
+        templateUrl: './createNewChannel.html',
+        controller: 'classAddInstanceCtrl',
+        resolve: {
+            classes: function () {
+                return $scope.classes;
+            },
+            student: function() {
+                return $scope.student;    
+            },
+            currentClass: function(){
+                return current_class;    
+            }
+        }
+        });
 
-app.controller('classSearchController', ['$http', '$scope', '$uibModal',
-    '$log', function($http, $scope, $uibModal, $log){
-
-    $scope.open = function (size) {
+        modalInstance.result.then(function () {
+            console.log("Success???");
+            $scope.getStudentClasses();
+        }, 
+        function () {
+            $log.info('Modal dismissed at: ' + new Date());
+            $scope.getStudentClasses();
+        });
+    };
+    
+    $scope.openClassSearch = function (size) {
     var modalInstance = $uibModal.open({
         animation: $scope.animationsEnabled,
         templateUrl: './findClassTest.html',
@@ -69,20 +114,17 @@ app.controller('classSearchController', ['$http', '$scope', '$uibModal',
             console.log("Success???");
         }, 
         function () {
+            $scope.getStudentClasses();
             $log.info('Modal dismissed at: ' + new Date());
         });
-    };
-
-    $scope.toggleAnimation = function () {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
     };
 
 }]);
 
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
-app.controller('classSearchInstanceCtrl',['$scope','$uibModalInstance' , 'classes', 'student',
-    function ($scope, $uibModalInstance, classes, student) {
+app.controller('classSearchInstanceCtrl',['$scope','$uibModalInstance', '$http', 'classes', 'student',
+    function ($scope, $uibModalInstance, $http, classes, student) {
     
     $scope.classes = classes;
     $scope.student = student;
@@ -93,8 +135,16 @@ app.controller('classSearchInstanceCtrl',['$scope','$uibModalInstance' , 'classe
         console.log("Index #" + index + " clicked");    
     };
     
-    $scope.ok = function () {
-        $uibModalInstance.close();
+    $scope.onOkClick = function () {
+        console.log("About to add student to classes.....");
+        var ids = [];
+        for(var i = 0; i < $scope.selected.length; i++){
+            if($scope.selected[i]){
+                ids.push($scope.classes[i]["classID"]);
+            }
+        }
+        console.log("ids to add are: "+ids);
+        $scope.addStudentToClasses(ids)
     };
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
@@ -111,63 +161,46 @@ app.controller('classSearchInstanceCtrl',['$scope','$uibModalInstance' , 'classe
         });
     });
 
+    $scope.addStudentToClasses = function(classIDs){
+        var params = JSON.stringify({classID:classIDs, admin:"FALSE"});
+        $http.post(apiBase+'/students/' + $scope.student["studentID"] + '/classes'
+        , params).success(function(data){
+            console.log("Add student to classes result: "+data["message"]);
+            $uibModalInstance.dismiss('cancel');
+        }).error(function(data){
+            alert(data["message"]);
+            $uibModalInstance.dismiss('cancel');
+        });
+    };
     $scope.addClasses = function(){
-        console.log($scope.selected);
-        for(var i = 0; i < $scope.selected.length; i++){
-            if($scope.selected[i]){
-                console.log($scope.classes[i]);
-            }
-        }
-        console.log($scope.student);
-    };
-
-}]);
-
-app.controller('classAddController', ['$http', '$scope', '$uibModal',
-    '$log', function($http, $scope, $uibModal, $log){
-
-    $scope.open = function (size) {
-    var modalInstance = $uibModal.open({
-        animation: $scope.animationsEnabled,
-        templateUrl: './createNewChannel.html',
-        controller: 'classAddInstanceCtrl',
-        size: size,
-        resolve: {
-            classes: function () {
-                return $scope.classes;
-            },
-            student: function() {
-                return $scope.student;    
-            }
-        }
-        });
-
-        modalInstance.result.then(function () {
-            console.log("Success???");
-            $scope.getStudentClasses();
-        }, 
-        function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    };
-
-    $scope.toggleAnimation = function () {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
+        $scope.onOkClick();
     };
 
 }]);
 
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
-app.controller('classAddInstanceCtrl',['$scope','$uibModalInstance', '$http', 'classes', 'student',
-    function ($scope, $uibModalInstance, $http, classes, student) {
+app.controller('classAddInstanceCtrl',['$scope','$uibModalInstance', '$http', 
+'classes', 'student','currentClass',
+    function ($scope, $uibModalInstance, $http, classes, student, currentClass) {
     
+    $scope.currentClass = currentClass;
     $scope.classes = classes;
     $scope.student = student;
-    
-    $scope.cName = "";
-    $scope.cShort = "";
-    $scope.cLong = "";
+    $scope.edit = false;
+
+    if(typeof $scope.currentClass ==="undefined"){
+        $scope.cName = "";
+        $scope.cShort = "";
+        $scope.cLong = "";
+    }else{
+        $scope.edit = true;
+        $scope.cName = $scope.currentClass["name"];
+        $scope.cShort = $scope.currentClass["short_desc"];
+        $scope.cLong = $scope.currentClass["long_desc"];
+    }
+
+    console.log($scope.currentClass);
 
     $scope.formOK = function(){
         return ($scope.cName != "" 
@@ -176,36 +209,55 @@ app.controller('classAddInstanceCtrl',['$scope','$uibModalInstance', '$http', 'c
     }; 
     
     $scope.ok = function () {
-        console.log("OK pressed");
-        $scope.addClass();
-        //$uibModalInstance.close();
+        if($scope.edit){
+            console.log("edit called");
+            $scope.editclass();
+        }else{
+            $scope.addclass();
+        }
     };
 
-    $scope.addClass = function(){
+    $scope.editclass = function(){
         var params = JSON.stringify({"name":$scope.cName, 
             "short":$scope.cShort,
             "long":$scope.cLong});
-
-        $http.post('http://localhost:8888/api/index.php/classes', params).
+        console.log("params are:  " + params);
+        $http.put(apiBase+'/classes/'+$scope.currentClass["classID"], params).
         success(function(data){
-            console.log(data["data"][0]);
-            console.log("About to add student to new class");
+            console.log("Edit was success: "+data["data"][0]);
+            $uibModalInstance.dismiss('cancel');
+        }).error(function(data){
+            $uibModalInstance.dismiss('cancel');
+        });
+    };
+
+    $scope.addclass = function(){
+        var params = JSON.stringify({"name":$scope.cName, 
+            "short":$scope.cShort,
+            "long":$scope.cLong});
+        console.log("Adding class with params: "+params);
+        $http.post(apiBase+'/classes', params).
+        success(function(data){
+            console.log(data);
+            console.log("about to add student to new class");
             $scope.addStudentToClass(data["data"][0]["classID"]);
         }).error(function(data){
-            console.log("THERE WAS AN ERROR");
+            console.log("there was an error");
         });
     };
 
     $scope.addStudentToClass = function(classID){
         console.log("Adding student "+$scope.student["studentID"] +" to class...");
-        var params = JSON.stringify({classID:classID, admin:"TRUE"});
+        var params = JSON.stringify({classID:[classID], admin:"TRUE"});
         console.log("params are:  "+params);
-        $http.post('http://localhost:8888/api/index.php/students/' + $scope.student["studentID"] + '/classes'
+        $http.post(apiBase+'/students/' + $scope.student["studentID"] + '/classes'
         , params).success(function(data){
             console.log("Add student to class result: "+data["message"]);
+            $uibModalInstance.dismiss('concel');
         }).error(function(data){
             console.log(data);
             alert(data["message"]);
+            $uibModalInstance.dismiss('concel');
         });
     };
 

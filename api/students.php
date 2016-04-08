@@ -59,8 +59,12 @@ $app->post('/students/{id}/classes', function ($request, $response, $args) use (
     // Create new
     $stuID = $request->getAttribute('id');
     $body = $request->getParsedBody();
+    $responses = [];
     //echo("Got parsed bpdy....");
-    $result = $model->add_student_to_class($body['classID'], $stuID, $body['admin']);
+    foreach($body['classID'] as $id){
+        array_push($responses, json_decode($model->add_student_to_class($id, $stuID, $body['admin'])));
+    }
+    $result = json_encode($responses);
     $response->getBody()->write($result);
     return $response;
 });
@@ -88,11 +92,11 @@ $app->delete('/students/{id}', function ($request, $response, $args) use ($model
 });
 
 //DELET: removes a student from a class
-$app->delete('/students/{id}/classes', function ($request, $response, $args) use ($model) {
+$app->delete('/students/{id}/classes/{cid}', function ($request, $response, $args) use ($model) {
     // Create new
     $id	= $args['id']; 
-    $body = $request->getParsedBody();
-    $classID = $body['classID'];
+    //$body = $request->getParsedBody();
+    $classID = $args['cid'];//$body['classID'];
     $result = $model->delete_ID_from_table("studentID=$id AND classID=$classID", "class_members");
     $response->getBody()->write($result);
     return $response;

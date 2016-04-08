@@ -341,7 +341,7 @@ class Model {
     }
 
     public function add_student_to_class($classID, $stuID, $isAdmin){
-	    if(!$this->connected) return;
+        if(!$this->connected) return;
 	    $q = "INSERT INTO class_members(classID, studentID, admin) VALUES($classID, $stuID, $isAdmin)";
 	    try {
 	        $this->conn->exec($q);
@@ -379,7 +379,7 @@ class Model {
 	        return $this->result_message(TRUE, "Value successfully deleted from table", $tablename);
 	    }
 	    catch(PDOException $e) {
-	        return $this->result_message(FALSE, "Delete operation failed.","null");
+	        return $this->result_message(FALSE, "Delete operation failed: ".$e->getMessage(),"null");
 	    }
     }
 

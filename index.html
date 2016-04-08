@@ -13,6 +13,7 @@
         <script type="text/javascript" src="ui-bootstrap-tpls-1.2.5.js"></script>
         <script type="text/javascript" src="app.js"></script>
         <script type="text/javascript" src="classesApp.js"></script>
+        <script type="text/javascript" src="homeApp.js"></script>
         
         <!-- MATERIAL ICON FONT -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -50,8 +51,15 @@
     <div ng-controller = "fbUser as fb">
         <div ng-include="'main.html'" ng-show="fb.loggedIn"></div>
         <div ng-hide="fb.loggedIn">
-            <fb:login-button show-faces="true" max-rows="1" 
-            size="large"></fb:login-button>
+            <div class="container">
+            <div class="jumbotron" style="vertical-align: middle;">
+                <h3>Login Using Facebook</h3>
+                <div style="horizontal-align: middle;">
+                    <fb:login-button show-faces="true" max-rows="1" 
+                    size="large"></fb:login-button>
+                </div>
+            </div>
+            </div>
         </div>
     </div>
     </body>
