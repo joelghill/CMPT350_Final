@@ -4,7 +4,7 @@ class Model {
 
     var $servername		= "localhost";
     var $username		= "root";
-    var $password		= "";
+    var $password		= "saz8erX9";
     var $database_name 	= "";
     var $conn;
     var $connected = FALSE;
@@ -111,7 +111,7 @@ class Model {
 	    //if(!$this->connected) return;
 	    if($first == "" ||
 	        $last == "" ||
-            $email == "" ||
+            $email == "null" ||
             $facebook == "" ||
 	        !$this->connected){
 	        return $this->result_message(FALSE, "Missing required parameters.");

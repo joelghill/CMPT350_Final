@@ -37,19 +37,25 @@ app.factory('srvAuth', ['$rootScope', '$http', function ($rootScope, $http){
     
     this.registerStudent = function(){
         var _self = this;
+	console.log("Registering :"+ this.user.first_name);
         $http.post(apiBase+'students', 
         {first: this.user.first_name, 
         last: this.user.last_name, 
         email: this.user.email, 
         facebook: this.user.id}).success(function(data){
+	    console.log("REGISTERED STUDENT");
+	    console.log(data);
             if(data['result']){
+		console.log("Has result:  "+data["result"]);
                 $http.get(apiBase+'students/'+_self.user.id).success(function(data){
                     _self.data = data;
                     _self.broadcastUser();
                 });    
             }
 
-        });
+        }).error(function(data){
+		console.log(data);
+	});
     };
 
     this.checkRegistration = function(){

@@ -12,7 +12,6 @@
 
     $http.get(apiBase + '/classes').success(function(r){
         $scope.classes = r;
-        //$rootscope.classes = r;
     });
     $scope.$watch('user', function(newV, old){
         if(newV["student"] != null){
@@ -22,6 +21,9 @@
     });
     
     $scope.getStudentClasses = function() {
+    	$http.get(apiBase + '/classes').success(function(r){
+        	$scope.classes = r;
+    	});
         console.log("get student classes called for:" + $scope.student["studentID"]);
         $http.get(apiBase + 'students/' + $scope.student["studentID"] + '/classes').then(function(r){
             $scope.studentClasses = r.data.filter(function(c){
@@ -30,7 +32,6 @@
             $scope.studentAdminClasses = r.data.filter(function(c){
                 return (c.admin==1);
             });
-            $scope.classes = r.data;
             console.log($scope.classes);
         });
     };

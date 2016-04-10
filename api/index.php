@@ -11,7 +11,7 @@ $app = new \Slim\App;
 
 //echo "Created now Slim app instance....";
 $model = new Model();
-$model->init("localhost", "root", "root", "finalv3"); //PUT DATABASE AND PASSWORD HERE!!!! 
+$model->init("localhost", "root", "saz8erX9", "finalv3"); //PUT DATABASE AND PASSWORD HERE!!!! 
 
 require 'students.php';
 require 'achievements.php';
